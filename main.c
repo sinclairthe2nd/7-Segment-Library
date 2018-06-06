@@ -34,22 +34,22 @@
 
 #define PORT_7_SEGMENT PORTB
 #define DDR_7_SEGMENT DDRB
-#define PORT_DISPLAY PORTA 
-#define DDR_DISPLAY DDRA
+#define PORT_DISPLAY PORTD 
+#define DDR_DISPLAY DDRD 
 
 void SevenSegment(uint8_t count, uint8_t dec,uint8_t display_number)
 {
 //  This function shows value of count on display the decimal point is displayed if dp=1
   
-  int CountDis = 0
+  int CountDis = 0;
   
   //Multiplexing Block
   PORT_DISPLAY |= 1;                 //first display on (initial state)
   for(int a=0; a<display_number;a++)
   {
   CountDis = count%10;              //get the last number of count
-  Count = Count/10;                  //shave the last number of count
-  PORTA << 1;                       // Leftshift to get next Displaypin for Multiplexing
+  count = count/10;                  //shave the last number of count
+  PORTD << 1;                       // Leftshift to get next Displaypin for Multiplexing
   }
   
   if(count <dec)                //Determines if a number is in or out of range
