@@ -49,7 +49,7 @@ void SevenSegment(uint8_t count, uint8_t dec,uint8_t display_number)
   {
   CountDis = count%10;              //get the last number of count
   count = count/10;                  //shave the last number of count
-  PORTD << 1;                       // Leftshift to get next Displaypin for Multiplexing
+  PORT_DISPLAY << 1;                       // Leftshift to get next Displaypin for Multiplexing
   }
   
   if(count <dec)                //Determines if a number is in or out of range
