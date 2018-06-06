@@ -23,7 +23,7 @@
  */
 
 // clock speed for delay
-#define F_CPU 1000000UL  //Set Clockrate here  
+
 #include <avr/io.h>
 #include <util/delay.h>
 
@@ -35,24 +35,26 @@
 #define PORT_7_SEGMENT PORTB
 #define DDR_7_SEGMENT DDRB
 #define PORT_DISPLAY PORTA 
-#define DDR_Display DDRA
-void SevenSegment(uint8_t count,uint8_t dp, uint8_t dec_hex,uint8_t display_number)
+#define DDR_DISPLAY DDRA
+
+void SevenSegment(uint8_t count, uint8_t dec,uint8_t display_number)
 {
 //  This function shows value of count on display the decimal point is displayed if dp=1
-
-
+  
+  int CountDis = 0
+  
   //Multiplexing Block
-  PORT_DISPLAY |= 1 //first display on (initial state)
+  PORT_DISPLAY |= 1;                 //first display on (initial state)
   for(int a=0; a<display_number;a++)
   {
-  count%10 = CountDis; //get the last number of count
-  Count/10= Count;     //shave the last number of count
-  PORTA << 1; // Leftshift to get next Displaypin for Multiplexing
+  CountDis = count%10;              //get the last number of count
+  Count = Count/10;                  //shave the last number of count
+  PORTA << 1;                       // Leftshift to get next Displaypin for Multiplexing
   }
   
-  if(count <dec_hex) //Determines if a number is in or out of range
+  if(count <dec)                //Determines if a number is in or out of range
    {
-      switch (CountDis) //Maps the number in CountDis to the display rather crudely (its very flexible and readable though)
+      switch (CountDis)             //Maps the number in CountDis to the display rather crudely (its very flexible and readable though)
       {
          case 0:
          PORT_7_SEGMENT=0b10001000;
@@ -94,12 +96,7 @@ void SevenSegment(uint8_t count,uint8_t dp, uint8_t dec_hex,uint8_t display_numb
          PORT_7_SEGMENT=0b00001100;
          break;
       }
-      if(dp)
-      {
-         //if decimal point should be displayed make DP bit Low 
-         //Needs to be changed in a clever way to make multiplexing work
-         PORT_7_SEGMENT&=0b11110111;
-      }
+      
    }
    else
    {
@@ -118,16 +115,17 @@ int main()
    //Setup
    DDR_7_SEGMENT=0xFF;    //All output
    PORT_7_SEGMENT=0xFF;   //All segments off
-   DDR_Display=0xFF;      //All Pins are outputs for now
+   DDR_DISPLAY=0xFF;      //All Pins are outputs for now
+   
    uint8_t count=0;
-   uint8_t dec_hex=10; //Range 0-9 = 10 
-   uint8_t display_number=1 //number on Display
-   while(1)  //loop forever
+   uint8_t dec=10;        //Range 0-9 = 10 
+   uint8_t display_number=1; //number off Displays
+   while(1)               //loop forever
    {
-      SevenSegment(count,0, dec_hex);
+      SevenSegment(count,dec,display_number);
 
       count++;
-      if(count==dec_hex)  
+      if(count==dec)  
       {
          count=0;
       }
