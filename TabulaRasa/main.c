@@ -5,12 +5,39 @@
 
 #define PORT_7_SEGMENT PORTD
 #define DDR_7_SEGMENT DDRD
-int number = 0;
+#define DDR_MULTI DDRB
+#define PORTMULTI PORTB
 
 
-void SevenSegment(uint8_t number)
+int NUMBER = 0;
+int INPUTNUMBER =0;
+
+
+void SevenSegment(int INPUTNUMBER)
 {
-switch (number)//Maps the number in number to the display rather crudely (its very flexible and readable though)
+if(INPUTNUMBER > 9) //Conditioning of the Inputnumber
+      {
+      
+      NUMBER=INPUTNUMBER%10; //This extracts the last digit using modulo  
+      PORTMULTI=0b00000001;  //Turn on first Display     
+      Display(NUMBER);
+      _delay_ms(10);
+      NUMBER=INPUTNUMBER/10;  //This Shaves of the last digit of inputnumber
+      PORTMULTI=0b00000010;  //Turn on Second Display
+      Display(NUMBER);
+      _delay_ms(10);
+      }
+    else
+      {
+      NUMBER=INPUTNUMBER;
+      PORTMULTI=0b00000001;  //Turn on first Display 
+      Display(NUMBER);
+      }
+}
+void Display(int NUMBER)
+{
+
+switch (NUMBER)//Maps the number in number to the display rather crudely (its very flexible and readable though)
       {
          case 0:
          PORT_7_SEGMENT=0b01000000;
@@ -59,18 +86,18 @@ int main(void)
    //Setup
    DDR_7_SEGMENT=0b11111111;    //All output
    PORT_7_SEGMENT=0xFF;   //All segments off
-      
+   DDR_MULTI=0b11111111;  //All Multiplexing  pins are outputs 
    while(1)               //loop forever
    {
-     //  PORT_7_SEGMENT=0b00000000;
-      SevenSegment(number);
+     
+      SevenSegment(INPUTNUMBER);
       
-      number++;
-      if(number==10)  
+      INPUTNUMBER++;
+      if(INPUTNUMBER==99)  
       {
-         number=0;
+         INPUTNUMBER=0;
       }
-      _delay_ms(250);
+      _delay_ms(50);
       
      
    }
