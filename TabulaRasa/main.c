@@ -17,21 +17,23 @@ void SevenSegment(int INPUTNUMBER)
 {
 if(INPUTNUMBER > 9) //Conditioning of the Inputnumber
       {
-      
-      NUMBER=INPUTNUMBER%10; //This extracts the last digit using modulo  
-      PORTMULTI=0b00000001;  //Turn on first Display     
-      Display(NUMBER);
-      _delay_ms(10);
-      NUMBER=INPUTNUMBER/10;  //This Shaves of the last digit of inputnumber
-      PORTMULTI=0b00000010;  //Turn on Second Display
-      Display(NUMBER);
-      _delay_ms(10);
+        for (int a=0; a<10;a++)
+            {
+            NUMBER=INPUTNUMBER%10; //This extracts the last digit using modulo  
+            PORTMULTI=0b00000001;  //Turn on first Display     
+            Display(NUMBER);
+            _delay_ms(1);
+            NUMBER=INPUTNUMBER/10;  //This Shaves of the last digit of inputnumber
+            PORTMULTI=0b00000010;  //Turn on Second Display
+            Display(NUMBER);
+            _delay_ms(1);
+            }
       }
     else
       {
-      NUMBER=INPUTNUMBER;
-      PORTMULTI=0b00000001;  //Turn on first Display 
-      Display(NUMBER);
+        NUMBER=INPUTNUMBER;
+        PORTMULTI=0b00000001;  //Turn on first Display 
+        Display(NUMBER);
       }
 }
 void Display(int NUMBER)
@@ -86,18 +88,20 @@ int main(void)
    //Setup
    DDR_7_SEGMENT=0b11111111;    //All output
    PORT_7_SEGMENT=0xFF;   //All segments off
-   DDR_MULTI=0b11111111;  //All Multiplexing  pins are outputs 
+   DDR_MULTI=0b11111111;  //All Multiplexing  pins are outputs
+   int count = 0;
    while(1)               //loop forever
    {
-     
+      
       SevenSegment(INPUTNUMBER);
       
-      INPUTNUMBER++;
+         INPUTNUMBER++;
       if(INPUTNUMBER==99)  
       {
          INPUTNUMBER=0;
       }
-      _delay_ms(50);
+    
+    _delay_ms(7);
       
      
    }
